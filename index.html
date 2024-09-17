@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #0CC0DF; /* Background color */
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 40%;
+            max-width: 800px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Shadow */
+            padding: 20px;
+        }
+        img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            cursor: pointer;
+            border: 5px solid #0CC0DF; /* Outer blue border color */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .qa-box {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .question {
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .answer {
+            font-size: 1.2em;
+            color: #555;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* Text shadow */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img id="quizImage" src="https://i.imgur.com/uM4wlgi.png" alt="Quiz Image">
+        <div class="qa-box">
+            <div id="question" class="question">Click the image to get a question!</div>
+            <div id="answer" class="answer"></div>
+        </div>
+    </div>
+    
+    <script>
+        const questionsAndAnswers = [
+            { question: "Who performed the 1975 UK hit 'Make Me Smile (Come Up and See Me)'?", answer: "Steve Harley & Cockney Rebel" },
+            { question: "Which group sang the 1990 hit 'Ice Ice Baby'?", answer: "Vanilla Ice" },
+            { question: "What was the one-hit wonder by Norman Greenbaum in 1970?", answer: "'Spirit in the Sky'" },
+            { question: "Which band had a hit with 'The Safety Dance' in 1983?", answer: "Men Without Hats" },
+            { question: "Who had a one-hit wonder with 'Kung Fu Fighting' in 1974?", answer: "Carl Douglas" },
+            { question: "What was the one-hit wonder by Los del Río in 1996?", answer: "'Macarena'" },
+            { question: "Which group sang 'Mambo No. 5' in 1999?", answer: "Lou Bega" },
+            { question: "Who performed 'I'm Too Sexy', a 1991 hit in the UK?", answer: "Right Said Fred" },
+            { question: "Which song was a one-hit wonder for Chesney Hawkes in 1991?", answer: "'The One and Only'" },
+            { question: "Who had a hit with 'Tubthumping' in 1997?", answer: "Chumbawamba" },
+            { question: "What was the one-hit wonder by the Buggles in 1979?", answer: "'Video Killed the Radio Star'" },
+            { question: "Which group sang 'Edelweiss' in 1988?", answer: "Edelweiss" },
+            { question: "Who had a one-hit wonder with 'Come On Eileen' in 1982?", answer: "Dexys Midnight Runners" },
+            { question: "Which 1987 song by Rick Astley became a UK hit?", answer: "'Never Gonna Give You Up'" },
+            { question: "What was the one-hit wonder for Afroman in 2000?", answer: "'Because I Got High'" },
+            { question: "Which song did Rednex take to the UK charts in 1994?", answer: "'Cotton Eye Joe'" },
+            { question: "What was the one-hit wonder by Billy Ray Cyrus in 1992?", answer: "'Achy Breaky Heart'" },
+            { question: "Who performed 'Spirit in the Sky' in 1986?", answer: "Doctor and the Medics" },
+            { question: "Which band had a hit with 'Take On Me' in 1985?", answer: "A-ha" },
+            { question: "What was the one-hit wonder for Haddaway in 1993?", answer: "'What is Love?'" },
+            { question: "Which artist sang 'Walking in Memphis' in 1991?", answer: "Marc Cohn" },
+            { question: "Who had a one-hit wonder with 'Tainted Love' in 1981?", answer: "Soft Cell" },
+            { question: "Which song was a hit for White Town in 1997?", answer: "'Your Woman'" },
+            { question: "What was the one-hit wonder by Len in 1999?", answer: "'Steal My Sunshine'" },
+            { question: "Who had a hit with 'Stuck in the Middle with You' in 1973?", answer: "Stealers Wheel" },
+            { question: "Which group sang 'Black Betty' in 1977?", answer: "Ram Jam" },
+            { question: "What was the one-hit wonder by The Vapors in 1980?", answer: "'Turning Japanese'" },
+            { question: "Who performed 'Love Grows (Where My Rosemary Goes)' in 1970?", answer: "Edison Lighthouse" },
+            { question: "Which artist had a hit with 'Teenage Dirtbag' in 2000?", answer: "Wheatus" },
+            { question: "What was the one-hit wonder by Sir Mix-a-Lot in 1992?", answer: "'Baby Got Back'" },
+            { question: "Which group had a UK hit with 'Pass the Dutchie' in 1982?", answer: "Musical Youth" },
+            { question: "What was the one-hit wonder by Deep Blue Something in 1995?", answer: "'Breakfast at Tiffany's'" },
+            { question: "Who performed 'Two Princes' in 1993?", answer: "Spin Doctors" },
+            { question: "Which group sang 'No Rain' in 1992?", answer: "Blind Melon" },
+            { question: "Who had a one-hit wonder with 'Pop Muzik' in 1979?", answer: "M" },
+            { question: "What was the one-hit wonder by Crazy Town in 2001?", answer: "'Butterfly'" },
+            { question: "Which band performed 'My Sharona' in 1979?", answer: "The Knack" },
+            { question: "Who sang 'O-o-h Child' in 1970?", answer: "The Five Stairsteps" },
+            { question: "Which group had a hit with 'How Bizarre' in 1996?", answer: "OMC" },
+            { question: "What was the one-hit wonder by EMF in 1990?", answer: "'Unbelievable'" },
+            { question: "Who performed 'Play That Funky Music' in 1976?", answer: "Wild Cherry" },
+            { question: "Which band had a hit with 'Mickey' in 1982?", answer: "Toni Basil" },
+            { question: "What was the one-hit wonder by The La's in 1990?", answer: "'There She Goes'" },
+            { question: "Who had a hit with 'I Touch Myself' in 1991?", answer: "Divinyls" },
+            { question: "Which group sang 'Come and Get Your Love' in 1974?", answer: "Redbone" },
+            { question: "What was the one-hit wonder for New Radicals in 1998?", answer: "'You Get What You Give'" },
+            { question: "Who performed 'Bitter Sweet Symphony' in 1997?", answer: "The Verve" },
+            { question: "Which artist sang 'Hey There Delilah' in 2006?", answer: "Plain White T's" },
+            { question: "What was the one-hit wonder by The Weather Girls in 1982?", answer: "'It's Raining Men'" },
+            { question: "Who performed 'Come On Eileen' in 1982?", answer: "Dexys Midnight Runners" },
+            { question: "Which band had a hit with 'One Week' in 1998?", answer: "Barenaked Ladies" },
+            { question: "What was the one-hit wonder by The Proclaimers in 1988?", answer: "'I'm Gonna Be (500 Miles)'" },
+            { question: "Who performed 'You Spin Me Round (Like a Record)' in 1984?", answer: "Dead or Alive" },
+            { question: "Which group had a UK hit with 'Walking on Sunshine' in 1983?", answer: "Katrina and the Waves" },
+            { question: "What was the one-hit wonder by Right Said Fred in 1991?", answer: "'I'm Too Sexy'" },
+            { question: "Who performed 'The Ketchup Song' in 2002?", answer: "Las Ketchup" },
+            { question: "Which band had a hit with 'The Final Countdown' in 1986?", answer: "Europe" },
+            { question: "What was the one-hit wonder by House of Pain in 1992?", answer: "'Jump Around'" },
+            { question: "Who performed 'Bad Day' in 2005?", answer: "Daniel Powter" },
+            { question: "Which group sang 'The Night the Lights Went Out in Georgia' in 1972?", answer: "Vicki Lawrence" },
+            { question: "What was the one-hit wonder by The Outfield in 1985?", answer: "'Your Love'" },
+            { question: "Who had a hit with 'Don't Worry, Be Happy' in 1988?", answer: "Bobby McFerrin" },
+            { question: "Which group had a UK hit with 'Electric Avenue' in 1983?", answer: "Eddy Grant" },
+            { question: "What was the one-hit wonder by The Rembrandts in 1995?", answer: "'I'll Be There for You'" },
+            { question: "Who performed 'Whip It' in 1980?", answer: "Devo" },
+            { question: "Which group had a hit with '867-5309/Jenny' in 1981?", answer: "Tommy Tutone" },
+            { question: "What was the one-hit wonder by Frankie Goes to Hollywood in 1984?", answer: "'Relax'" },
+            { question: "Who had a hit with 'Tarzan Boy' in 1985?", answer: "Baltimora" },
+            { question: "Which artist sang 'Groove Is in the Heart' in 1990?", answer: "Deee-Lite" },
+            { question: "What was the one-hit wonder by Taco in 1982?", answer: "'Puttin' on the Ritz'" },
+            { question: "Who performed 'In a Big Country' in 1983?", answer: "Big Country" },
+            { question: "Which band had a hit with 'In the Meantime' in 1996?", answer: "Spacehog" },
+            { question: "What was the one-hit wonder by Eiffel 65 in 1999?", answer: "'Blue (Da Ba Dee)'" },
+            { question: "Who had a hit with 'She's Like the Wind' in 1987?", answer: "Patrick Swayze" },
+            { question: "Which group sang 'Shaddap You Face' in 1980?", answer: "Joe Dolce Music Theatre" },
+            { question: "What was the one-hit wonder by Trio in 1982?", answer: "'Da Da Da'" },
+            { question: "Who performed 'Mmm Mmm Mmm Mmm' in 1993?", answer: "Crash Test Dummies" },
+            { question: "Which artist sang 'Somebody That I Used to Know' in 2011?", answer: "Gotye" },
+            { question: "What was the one-hit wonder by The Knack in 1979?", answer: "'My Sharona'" },
+            { question: "Who performed 'More Than Words' in 1991?", answer: "Extreme" },
+            { question: "Which group sang 'Black Velvet' in 1989?", answer: "Alannah Myles" },
+            { question: "What was the one-hit wonder by Mr. Big in 1991?", answer: "'To Be with You'" },
+            { question: "Who performed 'I Melt with You' in 1982?", answer: "Modern English" },
+            { question: "Which band had a hit with 'Life in a Northern Town' in 1985?", answer: "The Dream Academy" }
+        ];
+
+        const imageElement = document.getElementById("quizImage");
+        const questionElement = document.getElementById("question");
+        const answerElement = document.getElementById("answer");
+
+        imageElement.addEventListener("click", function() {
+            const randomIndex = Math.floor(Math.random() * questionsAndAnswers.length);
+            const randomQA = questionsAndAnswers[randomIndex];
+            questionElement.textContent = randomQA.question;
+            answerElement.textContent = randomQA.answer;
+        });
+    </script>
+</body>
+</html>
