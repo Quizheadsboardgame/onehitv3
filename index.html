@@ -5,47 +5,108 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ONE HIT WONDERS</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial, sans-serif;
+            font-family: Arial, sans-serif; /* Standard font */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: transparent; /* Fully transparent background */
+            color: black; /* Standard text color */
             text-align: center;
-            background-color: #f4f4f4;
-            color: #333;
         }
-        #question {
-            font-size: 24px;
-            margin: 20px;
+
+        #quiz-container {
+            background-color: transparent; /* Fully transparent container */
+            padding: 20px;
+            max-width: 600px;
+            width: 100%;
         }
-        #answer {
-            font-size: 20px;
-            margin: 20px;
-            opacity: 0;
-            transition: opacity 0.5s ease;
+
+        #logo {
+            width: 150px;
+            margin-bottom: 20px;
         }
-        .fadeIn {
-            opacity: 1;
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
         }
-        .fadeOut {
-            opacity: 0;
+
+        .question {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
         }
+
+        .answer {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: white; /* Change the answer color to white */
+        }
+
         #next-button {
-            padding: 10px 20px;
-            font-size: 18px;
+            background-color: white; /* Change background color to white */
+            color: black; /* Change text color to black for visibility */
+            border: 2px solid #ff9900; /* Optional: Add a border for better visibility */
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 10px;
             cursor: pointer;
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            border-radius: 5px;
+            font-size: 1rem;
+            transition: all 0.3s ease-in-out;
+        }
+
+        #next-button:hover {
+            background-color: #ffcc00; /* Change hover color for better effect */
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .fadeOut {
+            animation: fadeOut 0.5s forwards;
+        }
+
+        .fadeIn {
+            animation: fadeIn 0.5s forwards;
         }
     </style>
 </head>
 <body>
 
-<h1>ONE HIT WONDERS</h1>
-<div id="question"></div>
-<div id="answer"></div>
-<button id="next-button" onclick="nextQuestion()">Next Question</button>
+<div id="quiz-container">
+    <img id="logo" src="https://i.imgur.com/cyZ0Z21.png" alt="George Michael Logo">
+    <h1>ONE HIT WONDERS</h1>
+    <div id="question-container">
+        <div class="question" id="question">Loading question...</div>
+        <div class="answer" id="answer">Loading answer...</div>
+        <button id="next-button" onclick="nextQuestion()">Next Question</button>
+    </div>
+</div>
 
 <script>
+    // Question and answers data
     const quizData = [
         { question: "Who performed the 1975 UK hit 'Make Me Smile (Come Up and See Me)'?", answer: "Steve Harley & Cockney Rebel" },
         { question: "Which group sang the 1990 hit 'Ice Ice Baby'?", answer: "Vanilla Ice" },
@@ -136,24 +197,50 @@
     let currentQuestionIndex = 0;
 
     function showQuestion() {
-        const questionElement = document.getElementById("question");
-        const answerElement = document.getElementById("answer");
-        
-        questionElement.innerText = quizData[currentQuestionIndex].question;
-        answerElement.innerText = quizData[currentQuestionIndex].answer;
-        answerElement.classList.remove('fadeIn', 'fadeOut');
+        const questionElement = document.getElementById('question');
+        const answerElement = document.getElementById('answer');
+        const nextButton = document.getElementById('next-button');
+
+        // Reset the fade out animation
+        questionElement.classList.remove('fadeOut');
+        answerElement.classList.remove('fadeOut');
+
+        // Fade out the answer and question
+        questionElement.classList.add('fadeOut');
         answerElement.classList.add('fadeOut');
+
         setTimeout(() => {
-            answerElement.classList.remove('fadeOut');
+            const currentQuestion = quizData[currentQuestionIndex];
+
+            questionElement.textContent = currentQuestion.question;
+            answerElement.textContent = currentQuestion.answer;
+
+            // Reset the fade in animation
+            questionElement.classList.remove('fadeIn');
+            answerElement.classList.remove('fadeIn');
+
+            // Fade in the question and answer
+            questionElement.classList.add('fadeIn');
             answerElement.classList.add('fadeIn');
         }, 500);
     }
 
     function nextQuestion() {
-        currentQuestionIndex = (currentQuestionIndex + 1) % quizData.length;
-        showQuestion();
+        currentQuestionIndex++;
+        if (currentQuestionIndex < quizData.length) {
+            showQuestion();
+        } else {
+            const questionElement = document.getElementById('question');
+            const answerElement = document.getElementById('answer');
+            const nextButton = document.getElementById('next-button');
+
+            questionElement.textContent = "Quiz Complete!";
+            answerElement.textContent = "";
+            nextButton.style.display = "none"; // Hide the button
+        }
     }
 
+    // Initial call to show the first question
     showQuestion();
 </script>
 
